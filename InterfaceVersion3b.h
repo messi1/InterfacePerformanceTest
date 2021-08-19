@@ -2,47 +2,31 @@
 #define INTERFACEVERSION3B_H
 #include <iostream>
 
-template<class Derived>
+template <class Derived>
 class BaseTemplate
 {
-public:
-  BaseTemplate(const Derived& der = Derived()) : derived(der) {}
+  public:
+    BaseTemplate(const Derived& der = Derived()) : derived(der) {}
 
-  void read()
-  {
-    derived.read();
-  }
+    long read() const { return derived.read(); }
 
-  void write()
-  {
-      derived.write();
-  }
+    void write(const long value) { derived.write(value); }
 
-private:
-  Derived derived;
+  private:
+    Derived derived;
 };
 
-class ChildTemplate {
-public:
-    int read()
+class ChildTemplate
+{
+  public:
+    long read() const
     {
-        return 253*324;
-//        std::cout << "Child::read\n";
+        return 253 * 324;
+        //        std::cout << "Child::read\n";
     }
-    void write()
-    {
-        std::cout << "Child::write\n";
-    }
+    void write(const long value) { std::cout << "Child::write" << value << std::endl; }
 };
 
 using BaseTemplateT = BaseTemplate<ChildTemplate>;
 
-//int main( void ) {
-//    Base<Child>bla;
-
-//    bla.read();
-//    bla.write();
-
-//  return 0;
-//}
 #endif // INTERFACEVERSION3B_H

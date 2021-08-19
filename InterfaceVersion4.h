@@ -4,28 +4,32 @@
 #include <iostream>
 #include <memory>
 
-using MyFunc = std::function<void(void)>;
+using MyFuncRead = std::function<long(void)>;
+using MyFuncWrite = std::function<void(const long)>;
 
 class BaseLambda
 {
   public:
-    void read(){ m_readFunc(); }
-    void write(){ m_writeFunc(); }
+    long read() { return m_readFunc(); }
+    void write(const long value) { m_writeFunc(value); }
+
   protected:
-    BaseLambda( MyFunc readFunc, MyFunc writeFunc) : m_readFunc(readFunc), m_writeFunc(writeFunc)
-    {}
-    MyFunc m_readFunc;
-    MyFunc m_writeFunc;
+    BaseLambda(MyFuncRead readFunc, MyFuncWrite writeFunc) : m_readFunc(readFunc), m_writeFunc(writeFunc) {}
+    MyFuncRead m_readFunc;
+    MyFuncWrite m_writeFunc;
 };
 
 class ChildLambda : public BaseLambda
 {
   public:
-    ChildLambda() : BaseLambda([](){ ChildLambda::read_impl();}, [](){ ChildLambda::write_impl();}) { }
-  private:
-    static int read_impl(){ return 253*324;/*std::cout << "Child::read\n";*/ }
-    static void write_impl(){ std::cout << "Child::write\n"; }
-};
+    ChildLambda()
+        : BaseLambda([]() { return ChildLambda::read_impl(); },
+                     [](const long value) { ChildLambda::write_impl(value); })
+    {}
 
+  private:
+    static long read_impl() { return 253 * 324; /*std::cout << "Child::read\n";*/ }
+    static void write_impl(const long value) { std::cout << "Child::write " << value << std::endl; }
+};
 
 #endif // INTERFACEVERSION4_H

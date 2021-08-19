@@ -5,29 +5,28 @@
 
 class BasePrivateVirtual
 {
-public:
- void read() { read_impl(); }
- void write() { write_impl();}
+  public:
+    long read() const { return read_impl(); }
+    void write(const long value) { write_impl(value); }
 
-private:
- virtual int read_impl() = 0;
- virtual void write_impl() = 0;
+  private:
+    virtual long read_impl() const = 0;
+    virtual void write_impl(const long value) = 0;
 };
 
 class ChildPrivateVirtual : public BasePrivateVirtual
 {
+  private:
+    virtual long read_impl() const override
+    {
+        return 253 * 324;
+        //  std::cout << "Child::read_impl" << std::endl;
+    }
 
-private:
- virtual int read_impl() override
- {
-        return 253*324;
-//  std::cout << "Child::read_impl" << std::endl;
- }
-
- virtual void write_impl() override
- {
-  std::cout << "Child::read_impl" << std::endl;
- }
+    virtual void write_impl(const long value) override
+    {
+        std::cout << "Child::read_impl " << value << std::endl;
+    }
 };
 
 #endif // INTERFACEVERSION2_H
