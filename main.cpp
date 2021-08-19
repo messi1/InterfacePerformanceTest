@@ -14,7 +14,7 @@ template <typename T>
 void Test(const std::string& title, T&& testObject)
 {
     const std::clock_t startTime = std::clock();
-    long result = 0;
+    volatile long result = 0;
 
     for (unsigned long i = 0; i < 1'000'000'000; ++i)
     {
